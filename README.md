@@ -40,3 +40,5 @@ Publish the repository as an HTTPS static site. In GitHub, open **Settings → P
 
 
 **Riverboat Race** is the third game: Dibya and Hridika race down parallel rivers, paddle for speed, and dodge crocodiles. Race together from two phones with a room code, or play locally on one device. First boat to 1000 m wins.
+
+**Pillow Fight** is a photo-inspired 2D versus mini-game in the shared selector. It has swinging pose art, guard, jump, pillow-hit sounds, comic impact bursts, confetti, two-round matches, phone room codes, and local controls. Dibya wears a red panjabi with white pajama trousers.
