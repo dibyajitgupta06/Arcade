@@ -9,7 +9,7 @@ A small browser-game world made for Hridika and Dibya. The home page welcomes bo
 - **Pillow Fight: Dibya vs Hridika** (`pillow-fight.html`) — a 2D pillow fight with online rooms and local controls.
 
 ## Play online from two phones
-Open the same public HTTPS game URL on both phones. In a game that supports online play, one player creates a room and shares the code or invite link; the other opens the same game and joins. PeerJS Cloud brokers the browser connection. Online play needs WebRTC and an internet connection; some restrictive networks may need a TURN relay.
+Open the same public HTTPS game URL on both phones. In a game that supports online play, one player creates a room and shares the code or invite link; the other opens the same game and joins. PeerJS Cloud handles room signaling, and WebRTC uses STUN plus UDP/TCP TURN relay options to connect across more network types. If joining takes 45 seconds and times out, retry after switching one phone between Wi‑Fi and mobile data or using a hotspot; very restrictive networks can still block relay traffic.
 
 ## Run locally
 Open `index.html` in a browser or serve the repository folder with a static server, for example `python3 -m http.server 8000`, then visit `http://localhost:8000`.
