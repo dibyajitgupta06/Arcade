@@ -1,0 +1,10 @@
+.arcade-footer-actions{display:flex;align-items:center;gap:8px;flex:none}
+button.arcade-music-toggle{display:inline-flex;align-items:center;justify-content:center;min-height:34px;min-width:64px;padding:7px 10px;border:1px solid #c894b3;border-radius:999px;background:#382744;color:#fff3e8;box-shadow:0 2px 0 #1d1425;font:900 11px/1 Nunito,system-ui,sans-serif;white-space:nowrap;cursor:pointer}
+button.arcade-music-toggle[aria-pressed="true"]{background:#251a31;color:#d5c1d8;box-shadow:0 2px 0 #17101e}
+button.arcade-music-toggle:focus-visible{outline:3px solid #ffe29d;outline-offset:3px}
+.arcade-footer-actions .arcade-music-toggle{flex:none}
+.picker-footer{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
+.start-note{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
+.arcade-lobby-music{margin:9px auto 0}
+@media(max-width:700px){.arcade-footer-actions{gap:5px}button.arcade-music-toggle{min-width:58px;min-height:32px;padding:6px 8px;font-size:10px}footer.bar{flex-wrap:wrap}}
+@media(max-width:680px){footer:not(.bar){flex-wrap:wrap}.actions{flex-wrap:wrap;justify-content:flex-end}}
