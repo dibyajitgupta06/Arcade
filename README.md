@@ -4,7 +4,7 @@ A small browser-game world made for Hridika and Dibya. The home page welcomes bo
 
 ## Games
 - **Catch My Love** (`catch-my-love.html`) — a cooperative platform adventure with three levels, three difficulty settings, online room codes, phone controls, and one-device play.
-- **Catch the Love** (`heart-catcher.html`) — catch the hearts before Hridika gets angry.
+- **Love from Above** (`heart-catcher.html`) — catch the hearts before Hridika gets angry.
 - **Riverboat Race: Crocodile Dash** (`boat-race.html`) — paddle down the river and dodge crocodiles.
 - **Pillow Fight: Dibya vs Hridika** (`pillow-fight.html`) — a 2D pillow fight with online rooms and local controls.
 
@@ -17,4 +17,4 @@ Open `index.html` in a browser or serve the repository folder with a static serv
 ## Deployment
 GitHub Pages publishes the repository root from `feat/catch-my-love-prototype` over HTTPS. Configure **Settings → Pages → Deploy from a branch → feat/catch-my-love-prototype → /(root)**. Open the site on both phones to play online.
 
-The character art draws on the reference photos supplied for the project. Dibya wears a red panjabi with white pajama trousers.
+The welcome page shows Dibya and Hridika cuddled on a couch with controllers. In the mini-games, Dibya is drawn at his 5 ft 10 in height and Hridika at her 5 ft 5 in height.
