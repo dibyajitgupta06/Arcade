@@ -3,28 +3,35 @@
 A cooperative two-player pixel-art browser platform game. Play together from separate phones over the internet, or share one device. The static game has no build step.
 
 ## Play online from two phones
-1. Publish the repository as an HTTPS static site (GitHub Pages instructions below).
-2. Both players open the same game URL on their phones.
-3. Dibya taps **Create online room** and shares the room code or copied invite link.
-4. Hridika opens the invite (or enters the code and taps **Join room**).
-5. Dibya controls the left character; Hridika controls the right character. Each phone gets its own touch pad.
+1. Both players open the same public HTTPS game URL on their phones.
+2. Dibya chooses a level and difficulty, taps **Create online room**, and shares the room code or copied invite link.
+3. Hridika opens the invite (or enters the code and taps **Join room**).
+4. Each phone controls its own character. The host's level and difficulty apply to both players.
 
 PeerJS Cloud brokers the WebRTC connection. Once connected, the browser game state is sent directly between the two devices. It needs an internet connection and a browser that supports WebRTC. Some restrictive networks may block direct peer connections; those networks need a TURN relay.
+
+## Levels
+- **Sunset Garden:** warm hills, gentle starter platforms, and a short route.
+- **Moon Bazaar:** longer rooftops and more moving moon slimes.
+- **Cloud Bridge:** the longest route, with high floating platforms.
+
+Each stage has 12 hearts and its own shared timer and lives. Collect every heart, then bring both characters to the moon gate. Clear a level to continue to the next one; the last level ends with the joint victory screen.
+
+## Difficulty
+- **Easy:** 150 seconds and 5 shared lives; slower slimes.
+- **Normal:** 110 seconds and 3 shared lives.
+- **Hard:** 80 seconds and 2 shared lives; faster slimes.
+
+## Controls
+- **Dibya / room host:** left touch pad or A / D + W / Space.
+- **Hridika / room guest:** right touch pad or arrow keys + Enter.
+- Either player can request pause or restart; the host synchronizes that action.
 
 ## Run locally
 Open `index.html` in a modern browser, or serve the folder with any static web server (for example, `python3 -m http.server 8000`) and visit `http://localhost:8000`.
 
-## Play on one device
-- **Dibya:** A / D to move, W or Space to jump.
-- **Hridika:** Left / Right arrows to move, Up or Enter to jump.
-
-## Online controls
-- **Dibya / room host:** left touch pad or A / D + W / Space.
-- **Hridika / room guest:** right touch pad or arrow keys + Enter.
-- Collect all 12 hearts and bring both players to the gate before time runs out. You share three lives. Avoid moon slimes. Either player can ask to pause or restart the shared game.
-
-## Preview / deploy
-Enable GitHub Pages in **Settings → Pages**, choose **Deploy from a branch**, select `feat/catch-my-love-prototype` and `/(root)`. GitHub will show the HTTPS URL on that Settings page. Use that URL on both phones; local `localhost` previews are only reachable on the device running the server.
+## Deploy
+Publish the repository as an HTTPS static site. In GitHub, open **Settings → Pages**, choose **Deploy from a branch**, select `feat/catch-my-love-prototype` and `/(root)`. GitHub will show the HTTPS URL on that Settings page. Use that URL on both phones; a local `localhost` preview only works on the device running the server.
 
 ## Character art
-`assets/dibya.svg` and `assets/hridika.svg` are hand-authored crisp pixel sprite sheets. Each is arranged as four frames across and four animation rows: idle, run, jump, and celebration. The reference conversation describes Dibya in a red/magenta kurta with glasses and facial hair and Hridika in a purple sari with a bindi and jewellery. The original photos were not present in the connected conversation attachments or project files when these first-pass sprites were prepared, so they follow those written descriptions and should be refined against the photos when the source images are available.
+`assets/dibya.svg` and `assets/hridika.svg` are hand-authored crisp pixel sprite sheets. The opening screen shows a single portrait frame for both characters. The original photos were not present in the connected conversation attachments or project files when these first-pass sprites were prepared, so they follow the written descriptions and can be refined against the photos when the source images are available.
