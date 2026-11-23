@@ -2,6 +2,8 @@
 
 A cooperative two-player pixel-art browser platform game. Play together from separate phones over the internet, or share one device. The static game has no build step.
 
+The opening screen also links to **Catch the Love**, a second mini-game: Hridika sends hearts down from the balcony, and Dibya catches them from below. It supports keyboard and phone touch controls; three missed hearts make Hridika angry.
+
 ## Play online from two phones
 1. Both players open the same public HTTPS game URL on their phones.
 2. Dibya chooses a level and difficulty, taps **Create online room**, and shares the room code or copied invite link.
