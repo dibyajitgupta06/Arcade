@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Catch My Love — Dibya & Hridika</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@700;900&display=swap');
+:root{--ink:#26143f;--pink:#ff6b9e;--cream:#fff1d6}
+*{box-sizing:border-box}body{margin:0;background:#160f2c;color:var(--cream);font-family:Nunito,system-ui;min-height:100vh;display:grid;place-items:center;padding:14px}
+.shell{width:min(100%,1050px);background:#24143d;border:4px solid #8752a6;border-radius:18px;box-shadow:0 0 0 4px #100b20,0 18px 60px #080510;overflow:hidden}
+.top{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;background:linear-gradient(90deg,#3c205c,#702e70);gap:12px;flex-wrap:wrap}
+.brand{font:12px 'Press Start 2P';line-height:1.7;color:#ffd5e6}.brand small{display:block;font:700 12px Nunito;color:#f5c9e2}
+.hud{display:flex;gap:14px;align-items:center;font-weight:900}.pill{background:#281640;border:2px solid #a65caa;border-radius:12px;padding:8px 12px}
+canvas{display:block;width:100%;height:auto;image-rendering:pixelated;background:#a34c86;touch-action:none}
+.bottom{padding:12px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;background:#211437}
+.hint{font-size:13px;color:#e9cde7;line-height:1.6}.btn{border:0;border-radius:12px;background:#ff6b9e;color:#34173e;padding:11px 16px;font-weight:900;cursor:pointer;box-shadow:0 4px 0 #a83b72}.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #a83b72}
+.overlay{position:fixed;inset:0;background:#10091dcc;display:grid;place-items:center;padding:20px;z-index:5}.panel{width:min(92vw,520px);text-align:center;background:#2b1948;border:3px solid #c06eb3;border-radius:20px;padding:28px;box-shadow:0 20px 80px #0009}.pixel{font:clamp(15px,3vw,22px) 'Press Start 2P';line-height:1.7;color:#ffd2e5;text-shadow:3px 3px #8c367d}.panel p{line-height:1.7;color:#f3d9ec}.controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:12px}.touch{display:none;justify-content:space-between;padding:8px 12px;background:#190f2e}.pad{display:flex;gap:8px}.touch button{width:52px;height:48px;border:2px solid #a95eac;background:#43275c;color:white;border-radius:12px;font-size:20px;touch-action:none}
+@media(max-width:650px){body{padding:4px}.shell{border-width:2px}.top{padding:9px}.hud{gap:5px;font-size:12px}.pill{padding:6px}.touch{display:flex}.hint{font-size:11px}.bottom{padding:9px}}
+</style></head>
+<body><main class="shell">
+<header class="top"><div class="brand">CATCH MY LOVE <small>Dibya ♡ Hridika · co-op arcade</small></div><div class="hud"><div class="pill">♥ <span id="score">0</span>/12</div><div class="pill">TIME <span id="time">90</span>s</div><div class="pill">♥♥ <span id="lives">3</span></div></div></header>
+<canvas id="game" width="960" height="540" aria-label="Catch My Love two player arcade game"></canvas>
+<div class="touch"><div class="pad"><button data-key="a">◀</button><button data-key="d">▶</button><button data-key="w">⬆</button></div><div class="pad"><button data-key="left">◀</button><button data-key="right">▶</button><button data-key="up">⬆</button></div></div>
+<footer class="bottom"><div class="hint"><b>DIBYA</b> A / D move · W jump &nbsp; | &nbsp; <b>HRIDIKA</b> ← / → move · ↑ jump<br>Collect 12 hearts together. Watch out for the little bouncing clouds!</div><button class="btn" id="restart">↻ Restart</button></footer>
+</main>
+<div class="overlay" id="start"><div class="panel"><div class="pixel">CATCH<br>MY LOVE ♡</div><p>A tiny co-op adventure starring Dibya &amp; Hridika.<br>Collect 12 hearts and reach the glowing gate together!</p><div class="controls"><button class="btn" id="play">LET'S PLAY ♥</button></div><p style="font-size:12px">Two players · One keyboard · A little teamwork</p></div></div>
+<div class="overlay" id="end" style="display:none"><div class="panel"><div class="pixel" id="endTitle">LEVEL COMPLETE!</div><p id="endText">You collected every heart together!</p><button class="btn" id="again">PLAY AGAIN ♥</button></div></div>
+<script>
+(()=>{
+const c=document.getElementById('game'),ctx=c.getContext('2d');ctx.imageSmoothingEnabled=false;
+const $=id=>document.getElementById(id);let running=false,ended=false,score=0,lives=3,time=90,last=0,keys={};
+const floor=470,gravity=.55;
+const players=[
+{x:90,y:390,vx:0,vy:0,w:34,h:58,color:'#b82d55',name:'DIBYA',face:'#f5bd91',hair:'#211526',dir:1,on:false,frame:0},
+{x:150,y:390,vx:0,vy:0,w:34,h:58,color:'#813caa',name:'HRIDIKA',face:'#f3bd9a',hair:'#241727',dir:1,on:false,frame:0}
+];
+const platforms=[{x:0,y:470,w:960,h:70},{x:190,y:385,w:170,h:18},{x:420,y:320,w:170,h:18},{x:660,y:390,w:150,h:18},{x:790,y:280,w:170,h:18}];
+let hearts=[],clouds=[],particles=[];
+function reset(){score=0;lives=3;time=90;ended=false;players[0].x=90;players[1].x=150;players.forEach(p=>{p.y=390;p.vx=p.vy=0});hearts=Array.from({length:12},(_,i)=>({x:210+(i%4)*175,y:330-Math.floor(i/4)*65,r:12,t:i*.7,got:false}));clouds=Array.from({length:5},(_,i)=>({x:120+i*190,y:440-i%2*65,v:(i%2?1:-1)*1.1,r:12}));particles=[];updateHud()}
+function updateHud(){$('score').textContent=score;$('time').textContent=Math.ceil(time);$('lives').textContent=lives}
+function rect(x,y,w,h,col){ctx.fillStyle=col;ctx.fillRect(Math.round(x),Math.round(y),w,h)}
+function drawHeart(x,y,s,col='#ff638f'){ctx.save();ctx.translate(x,y);ctx.scale(s/20,s/20);ctx.fillStyle=col;ctx.beginPath();ctx.moveTo(0,7);ctx.bezierCurveTo(-22,-7,-12,-22,0,-10);ctx.bezierCurveTo(12,-22,22,-7,0,7);ctx.fill();ctx.restore()}
+function background(){let g=ctx.createLinearGradient(0,0,0,540);g.addColorStop(0,'#593d87');g.addColorStop(.55,'#d66e9a');g.addColorStop(1,'#ffb17f');ctx.fillStyle=g;ctx.fillRect(0,0,960,540);
+for(let i=0;i<8;i++){let x=i*140-20;rect(x,255+(i%3)*25,75,215,'#704477');for(let j=0;j<3;j++)for(let k=0;k<4;k++)if((i+j+k)%2===0)rect(x+10+j*20,275+k*38,8,12,'#ffd18b')}
+ctx.fillStyle='#ffcf9b';ctx.beginPath();ctx.arc(770,115,48,0,7);ctx.fill();
+for(let i=0;i<5;i++){ctx.globalAlpha=.16;ctx.fillStyle='#fff';ctx.beginPath();ctx.ellipse(i*230+40,100+i%2*40,45,12,0,0,7);ctx.fill()}ctx.globalAlpha=1}
+function drawWorld(){background();platforms.forEach((p,i)=>{rect(p.x,p.y,p.w,p.h,'#59334f');rect(p.x,p.y,p.w,7,'#9dd36e');for(let x=p.x;x<p.x+p.w;x+=28){rect(x,p.y+9,24,p.h-9,i%2?'#785078':'#69436e');rect(x+3,p.y+12,4,4,'#a66c91')}}); 
+// little gate
+rect(900,218,12,62,'#ffe08b');rect(890,210,32,9,'#fff0bc');drawHeart(906,197,20,'#fff0bc');
+hearts.forEach(h=>{if(!h.got){let bob=Math.sin(performance.now()/250+h.t)*5;drawHeart(h.x,h.y+bob,25);ctx.strokeStyle='#ffe4ee';ctx.lineWidth=2;ctx.strokeRect(h.x-11,h.y-13+bob,22,22)}});
+clouds.forEach(o=>{ctx.fillStyle='#51305e';ctx.beginPath();ctx.arc(o.x,o.y,o.r,0,7);ctx.arc(o.x+12,o.y-6,o.r+2,0,7);ctx.arc(o.x+24,o.y,o.r,0,7);ctx.fill();rect(o.x-1,o.y,27,9,'#51305e')});
+players.forEach(drawPlayer);
+particles.forEach(p=>{ctx.globalAlpha=Math.max(0,p.life/30);drawHeart(p.x,p.y,10,p.col);ctx.globalAlpha=1});
+ctx.fillStyle='#fff2dc';ctx.font='bold 14px Nunito';ctx.fillText('DIBYA  WASD',20,28);ctx.fillText('HRIDIKA  ARROWS',790,28)}
+function drawPlayer(p){let x=Math.round(p.x),y=Math.round(p.y),bob=p.on?Math.sin(p.frame)*2:0;ctx.save();ctx.translate(x+p.w/2,y+bob);if(p.dir<0)ctx.scale(-1,1); // shadow
+ctx.fillStyle='#46274755';ctx.beginPath();ctx.ellipse(0,57,19,5,0,0,7);ctx.fill();
+rect(-10,35,8,17,'#f0d6bd');rect(2,35,8,17,'#f0d6bd');rect(-12,49,12,6,'#33243b');rect(1,49,13,6,'#33243b');
+// torso and clothes
+rect(-14,18,28,22,p.color);rect(-16,22,4,13,p.color);rect(12,22,4,13,p.color);rect(-12,39,24,3,p.color);
+if(p===players[1]){rect(-13,20,26,4,'#f4c2df');rect(-7,22,6,17,'#e9a7ce');rect(4,21,8,18,'#d89ac8');rect(7,18,3,4,'#ffd56e');}else{rect(-2,20,3,18,'#f1c78e');rect(-1,24,1,2,'#fff0bc');rect(-1,31,1,2,'#fff0bc')}
+// neck, face, hair
+rect(-5,12,10,8,p.face);rect(-12,-2,24,20,p.face);rect(-14,-5,28,10,p.hair);rect(-13,0,5,12,p.hair);rect(8,-1,6,10,p.hair);
+if(p===players[0]){rect(-12,-7,24,7,'#241b2b');rect(-11,-10,18,5,'#332333');rect(-10,5,9,6,'#241b2b');rect(2,5,9,6,'#241b2b');rect(-9,0,7,5,'#fff4dd');rect(3,0,7,5,'#fff4dd');rect(-7,1,3,3,'#292039');rect(5,1,3,3,'#292039');rect(-3,8,7,2,'#693c3b');rect(-5,13,10,2,'#43252e');rect(-5,12,3,3,'#43252e');rect(2,12,3,3,'#43252e');}
+else{rect(-8,0,6,7,'#fff2e5');rect(3,0,6,7,'#fff2e5');rect(-6,2,3,4,'#24182b');rect(5,2,3,4,'#24182b');rect(-2,9,5,2,'#a54d61');rect(0,-7,4,3,'#d8a17b');rect(-2,-4,4,2,'#b72f53');rect(12,16,3,8,'#ffd66e');}
+ctx.restore();ctx.fillStyle='#fff4df';ctx.font='bold 11px Nunito';ctx.textAlign='center';ctx.fillText(p.name,p.x+17,p.y-12);ctx.textAlign='left'}
+function collide(p){p.on=false;for(const q of platforms){if(p.vy>=0&&p.x+p.w>q.x&&p.x<q.x+q.w&&p.y+p.h>=q.y&&p.y+p.h-p.vy<=q.y){p.y=q.y-p.h;p.vy=0;p.on=true}}}
+function update(dt){if(!running||ended)return;time-=dt;if(time<=0){time=0;finish(false)}players.forEach((p,i)=>{let left=i===0?'a':'left',right=i===0?'d':'right',jump=i===0?'w':'up';let dir=(keys[right]?1:0)-(keys[left]?1:0);p.vx=dir*3.4;p.x=Math.max(0,Math.min(940,p.x+p.vx));if(dir)p.dir=dir;p.vy+=gravity;p.y+=p.vy;p.frame+=.18;collide(p);if(keys[jump]&&p.on){p.vy=-10.5;p.on=false}if(p.y>560){p.y=380;p.vy=0;lives--;updateHud();if(lives<=0)finish(false)}});
+clouds.forEach(o=>{o.x+=o.v;if(o.x<20||o.x>920)o.v*=-1;players.forEach(p=>{if(Math.abs(p.x+17-o.x)<25&&Math.abs(p.y+30-o.y)<25){p.vy=-6;p.x+=o.v*10}})});
+hearts.forEach(h=>{if(!h.got&&players.some(p=>p.x+p.w>h.x-12&&p.x<h.x+12&&p.y+p.h>h.y-12&&p.y<h.y+12)){h.got=true;score++;for(let i=0;i<5;i++)particles.push({x:h.x,y:h.y,life:30,col:'#ffb3d2'});updateHud()}});
+particles.forEach(p=>{p.y-=1.3;p.life--});particles=particles.filter(p=>p.life>0);
+if(score>=12&&players.every(p=>p.x>830))finish(true)}
+function finish(win){ended=true;running=false;$('endTitle').textContent=win?'LEVEL COMPLETE! ♥':'TIME TO TRY AGAIN';$('endText').textContent=win?'Dibya + Hridika = the perfect team. You collected every heart!':'You collected '+score+' hearts together. One more round?';$('end').style.display='grid'}
+function loop(ts){let dt=Math.min((ts-last)/1000||0,.04);last=ts;update(dt);drawWorld();requestAnimationFrame(loop)}
+function start(){reset();$('start').style.display='none';$('end').style.display='none';running=true;last=performance.now()}
+window.addEventListener('keydown',e=>{let k=e.key.toLowerCase();if(['arrowleft','arrowright','arrowup',' '].includes(k))e.preventDefault();keys[k==='arrowleft'?'left':k==='arrowright'?'right':k==='arrowup'?'up':k]=true});
+window.addEventListener('keyup',e=>{let k=e.key.toLowerCase();keys[k==='arrowleft'?'left':k==='arrowright'?'right':k==='arrowup'?'up':k]=false});
+document.querySelectorAll('[data-key]').forEach(b=>{let k=b.dataset.key;const on=e=>{e.preventDefault();keys[k]=true},off=e=>{e.preventDefault();keys[k]=false};b.addEventListener('pointerdown',on);b.addEventListener('pointerup',off);b.addEventListener('pointerleave',off);b.addEventListener('pointercancel',off)});
+$('play').onclick=start;$('again').onclick=start;$('restart').onclick=()=>{if(running)start();else{$('end').style.display='none';$('start').style.display='grid'}};
+reset();requestAnimationFrame(loop);
+})();
+</script></body></html>
