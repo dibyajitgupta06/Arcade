@@ -37,3 +37,6 @@ Publish the repository as an HTTPS static site. In GitHub, open **Settings → P
 
 ## Character art
 `assets/dibya.svg` and `assets/hridika.svg` are hand-authored crisp pixel sprite sheets. The opening screen shows a single portrait frame for both characters. The original photos were not present in the connected conversation attachments or project files when these first-pass sprites were prepared, so they follow the written descriptions and can be refined against the photos when the source images are available.
+
+
+**Riverboat Race** is the third game: Dibya and Hridika race down parallel rivers, paddle for speed, and dodge crocodiles. Race together from two phones with a room code, or play locally on one device. First boat to 1000 m wins.
