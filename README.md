@@ -14,6 +14,9 @@ Open the same public HTTPS game URL on both phones. In a game that supports onli
 ## Run locally
 Open `index.html` in a browser or serve the repository folder with a static server, for example `python3 -m http.server 8000`, then visit `http://localhost:8000`.
 
+## Music
+Each mini-game has a soft, original looping soundtrack synthesized by the browser. The **♫ ON / ♫ OFF** toggle appears on the welcome and game-selection screens, in each game lobby, and in the game controls. Music starts after you begin the picker or a game, and your mute choice is remembered across games. Pillow Fight sound effects remain separate from the music toggle.
+
 ## Deployment
 GitHub Pages publishes the repository root from `feat/catch-my-love-prototype` over HTTPS. Configure **Settings → Pages → Deploy from a branch → feat/catch-my-love-prototype → /(root)**. Open the site on both phones to play online.
 
